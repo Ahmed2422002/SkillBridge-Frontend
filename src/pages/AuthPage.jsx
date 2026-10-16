@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaGoogle,
@@ -9,6 +9,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
+import { postJSON, saveToken } from "../utils/api";
 
 // كومبوننت واحد يغطي واجهة تسجيل الطالب:
 //   mode="signup" -> الصورة 2 (Create Your Account)
@@ -19,7 +20,11 @@ import { FiUser, FiMail, FiLock } from "react-icons/fi";
 export default function AuthPage({ mode }) {
   const navigate = useNavigate();
   const isSignUp = mode === "signup";
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+// يمسح الخطأ لما يتبدل بين Login و Sign Up
+useEffect(() => { setError(""); }, [mode]);   
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -34,15 +39,57 @@ export default function AuthPage({ mode }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: اربطها بالـ API الخاص بالتسجيل / تسجيل الدخول
-    console.log(isSignUp ? "Sign up:" : "Login:", form);
-     navigate("/onboarding");
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
+  if (isSignUp && form.password !== form.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const data = isSignUp
+      ? await postJSON("/auth/student/signup", {
+          fullName: form.fullName,
+          email: form.email,
+          password: form.password,
+        })
+      : await postJSON("/auth/student/login", {
+          email: form.email,
+          password: form.password,
+        });
+
+    if (data.token) saveToken(data.token, isSignUp ? true : remember);
+    navigate("/onboarding");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+/*const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+
+  if (isSignUp && form.password !== form.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  setLoading(true);
+
+  // تجربة مؤقتة بدون Backend
+  setTimeout(() => {
+    saveToken("test-token", isSignUp ? true : remember);
+    navigate("/onboarding");
+    setLoading(false);
+  }, 500);
+};
+*/
   return (
-    <div className="auth-page d-flex flex-column min-vh-100 bg-white">
+    <div className="auth-page d-flex flex-column min-vh-100 bg-white">*/
       {/* Navbar */}
       <nav className="navbar navbar-light bg-white py-3">
         <div className="container d-flex justify-content-end align-items-center gap-3">
@@ -204,12 +251,15 @@ export default function AuthPage({ mode }) {
               </div>
             )}
 
+                       {error && <div className="alert alert-danger py-2 small">{error}</div>}
+
             <button
               type="submit"
+              disabled={loading}
               className="btn w-100 text-white rounded-pill py-2 fw-semibold mb-3"
               style={{ backgroundColor: "#22D3C5" }}
             >
-              {isSignUp ? "Continue with Email" : "Log In"}
+              {loading ? "Please wait..." : isSignUp ? "Continue with Email" : "Log In"}
             </button>
           </form>
 

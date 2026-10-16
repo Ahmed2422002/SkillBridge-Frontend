@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaLinkedin, FaGithub, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiMail, FiLock } from "react-icons/fi";
+import { postJSON, saveToken } from "../utils/api";
 
 // كومبوننت جديد كليًا لواجهة "Welcome Back, Mentor!" (الصورة 5)
 // يظهر عند اختيار "Mentor" من شاشة RoleSelect (intent="login")
@@ -13,18 +14,43 @@ export default function MentorLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");          // جديد
+  const [loading, setLoading] = useState(false);   // جديد
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: اربطها بالـ API الخاص بتسجيل دخول المنتور
-    console.log("Mentor login:", form);
+    setError("");
+    setLoading(true);
+    try {
+      const data = await postJSON("/auth/mentor/login", {
+        email: form.email,
+        password: form.password,
+      });
+      if (data.token) saveToken(data.token, remember);
       navigate("/mentor-dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
+/*const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+
+  // تجربة مؤقتة بدون Backend
+  setTimeout(() => {
+    saveToken("test-mentor-token", remember);
+    navigate("/mentor-dashboard");
+    setLoading(false);
+  }, 500);
+};*/
   return (
     <div className="auth-page d-flex flex-column min-vh-100 bg-white">
       {/* Navbar */}
@@ -132,12 +158,15 @@ export default function MentorLogin() {
               </span>
             </div>
 
+                       {error && <div className="alert alert-danger py-2 small">{error}</div>}
+
             <button
               type="submit"
+              disabled={loading}
               className="btn w-100 text-white rounded-pill py-2 fw-semibold mb-3"
               style={{ backgroundColor: "#22D3C5" }}
             >
-              Log In
+              {loading ? "Please wait..." : "Log In"}
             </button>
           </form>
 

@@ -7,10 +7,9 @@ import { SiDjango, SiMongodb } from "react-icons/si";
 import {
   BsDatabaseFill, BsCloudUploadFill, BsKanbanFill, BsDiagram3Fill, BsCheckCircleFill,
   BsGraphUp, BsTable, BsBarChartFill, BsCalculator, BsClipboardData, BsCpuFill, BsCheckSquareFill,
-  BsPhone, BsCodeSlash, BsLaptop, BsGearFill, BsSpeedometer2, BsLockFill, BsBellFill,
+  BsPhone, BsCodeSlash, BsLaptop, BsGearFill, BsSpeedometer2, BsBellFill,
   BsPalette2, BsLayoutTextWindow, BsSearch, BsShieldLock, BsHddNetwork, BsBugFill,
-  BsPersonBadgeFill, BsMortarboardFill, BsBank2 , BsExclamationTriangleFill,
-  BsPcDisplay, BsKeyFill, BsBinoculars,
+  BsBinoculars,
 } from "react-icons/bs";
 import { useOnboarding } from "../context/OnboardingContext";
 
@@ -56,7 +55,6 @@ const paths = {
       { key: "SQL", label: "SQL & PostgreSQL", icon: <BsDatabaseFill />, hours: 25 },
       { key: "Django", label: "Django", icon: <SiDjango />, hours: 25 },
       { key: "REST APIs", label: "REST APIs", icon: <BsDiagram3Fill />, hours: 25 },
-      { key: "Full-Stack Integration", label: "Full-Stack Integration", icon: <BsCloudUploadFill />, hours: 30 },
       { key: "Deployment", label: "Deployment", icon: <BsCloudUploadFill />, hours: 20 },
      
     ],
@@ -97,15 +95,14 @@ const paths = {
       { key: "Setup & Environment", label: "Setup & Environment", icon: <BsLaptop />, hours: 15 },
       { key: "Programming Basics", label: "Programming Basics", icon: <BsCodeSlash />, hours: 25 },
       { key: "Basic UI", label: "Basic UI", icon: <BsPhone />, hours: 20 },
-      { key: "Data Storage", label: "Data Storage", icon: <BsDatabaseFill />, hours: 20 },
+      //{ key: "Data Storage", label: "Data Storage", icon: <BsDatabaseFill />, hours: 20 },
       { key: "API Integration", label: "API Integration", icon: <BsCloudUploadFill />, hours: 20 },
       { key: "State Management", label: "State Management", icon: <BsDiagram3Fill />, hours: 25 },
       { key: "React Native", label: "Native Features", icon: <BsGearFill />, hours: 20 },
       { key: "Unit Testing", label: "Unit Testing", icon: <BsCheckSquareFill />, hours: 15 },
       { key: "Performance Optimization", label: "Performance Opt.", icon: <BsSpeedometer2 />, hours: 20 },
-      { key: "Security Basics", label: "Security Basics", icon: <BsLockFill />, hours: 20 },
       { key: "Advanced Features", label: "Advanced Features (e.g., Push notifications)", icon: <BsBellFill />, hours: 30 },
-      { key: "Deployment", label: "Deployment", icon: <BsCloudUploadFill />, hours: 35 },
+
     ],
   },
 
@@ -123,13 +120,11 @@ const paths = {
       { key: "Wireframing", label: "Wireframing", icon: <BsLayoutTextWindow />, hours: 25 },
       { key: "UI Fundamentals", label: "UI Fundamentals", icon: <BsPalette2 />, hours: 20 },
       { key: "Figma", label: "Design Systems", icon: <BsKanbanFill />, hours: 20 },
-      { key: "Prototyping", label: "Prototyping", icon: <BsLayoutTextWindow />, hours: 20 },
       { key: "Usability Testing", label: "Usability Testing", icon: <BsCheckSquareFill />, hours: 15 },
       { key: "Visual Design", label: "Visual Design", icon: <BsPalette2 />, hours: 15 },
       { key: "Interaction Design", label: "Interaction Design", icon: <BsGearFill />, hours: 20 },
       { key: "Motion Design", label: "Motion Design", icon: <BsDiagram3Fill />, hours: 25 },
-      { key: "Accessible Design", label: "Accessible Design", icon: <BsPersonBadgeFill />, hours: 35 },
-      { key: "Design Capstone", label: "Design Capstone", icon: <BsMortarboardFill />, hours: 40 },
+      
     ],
   },
 
@@ -142,18 +137,8 @@ const paths = {
       { label: "Threat Analysis", icon: <BsBinoculars /> },
     ],
     steps: [
-      { key: "Ethical Hacking", label: "Ethical Hacking", icon: <BsShieldLock />, hours: 15 },
-      { key: "Cyber Law", label: "Cyber Law", icon: <BsBank2 />, hours: 30 },
-      { key: "Risk Management", label: "Risk Management", icon: <BsExclamationTriangleFill />, hours: 25 },
-      { key: "System Security", label: "System Security", icon: <BsShieldLock />, hours: 20 },
-      { key: "OS Hardening", label: "OS Hardening", icon: <BsPcDisplay />, hours: 20 },
-      { key: "IAM", label: "IAM", icon: <BsKeyFill />, hours: 20 },
-      { key: "Network Forensics", label: "Network Forensics", icon: <BsBinoculars />, hours: 15 },
-      { key: "Incident Response", label: "Incident Response", icon: <BsBellFill />, hours: 15 },
-      { key: "Cloud Security", label: "Cloud Security", icon: <BsCloudUploadFill />, hours: 20 },
-      { key: "Penetration Testing", label: "Malware Analysis", icon: <BsBugFill />, hours: 25 },
-      { key: "Red Teaming", label: "Red Teaming", icon: <BsPersonBadgeFill />, hours: 35 },
-      { key: "Security Capstone", label: "Security Capstone", icon: <BsMortarboardFill />, hours: 40 },
+      { key: "Cybersecurity Basics", label: "Cybersecurity Basics", icon: <BsShieldLock />, hours: 15 },
+      
     ],
   },
 };

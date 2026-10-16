@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiUser, FiMail, FiLock, FiBriefcase, FiGlobe, FiClock } from "react-icons/fi";
 import { BsMortarboard, BsFileText } from "react-icons/bs";
+import { postJSON, saveToken } from "../utils/api";
 
 // كومبوننت جديد كليًا لواجهة "Create Mentor Account" (الصورة 3)
 // يظهر عند اختيار "Mentor" من شاشة RoleSelect (intent="signup")
@@ -15,6 +16,8 @@ export default function MentorSignup() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [agree, setAgree] = useState(false);
   const [bio, setBio] = useState("");
+ const [error, setError] = useState("");          // جديد
+  const [loading, setLoading] = useState(false);   // جديد
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -30,11 +33,26 @@ export default function MentorSignup() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: اربطها بالـ API الخاص بإنشاء حساب المنتور
-    console.log("Mentor sign up:", { ...form, bio });
-    navigate("/mentor-dashboard");
+    setError("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { confirmPassword, ...rest } = form;
+      const data = await postJSON("/auth/mentor/signup", { ...rest, bio });
+      if (data.token) saveToken(data.token, true);
+      navigate("/mentor-dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -276,12 +294,15 @@ export default function MentorSignup() {
               </label>
             </div>
 
+                        {error && <div className="alert alert-danger py-2 small">{error}</div>}
+
             <button
               type="submit"
+              disabled={loading}
               className="btn w-100 text-white rounded-pill py-2 fw-semibold mb-3"
               style={{ backgroundColor: "#0f8f8a" }}
             >
-              Create Mentor Account
+              {loading ? "Please wait..." : "Create Mentor Account"}
             </button>
           </form>
 

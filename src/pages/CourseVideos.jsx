@@ -10,6 +10,7 @@ import {
 import { useOnboarding } from "../context/OnboardingContext";
 import { learningPaths } from "../data/coursePlaylists";
 import { fetchPlaylistVideos } from "../utils/youtube";
+import { getVideosByPath } from "../utils/api";
 import { getCompletedVideos, markVideoCompleted, isVideoCompleted, setLastVisitedPath } from "../utils/progress";
 // ألوان مميزة لكل تصنيف (badge)، تدور تلقائيًا لو التصنيفات أكثر من الألوان
 const BADGE_COLORS = [
@@ -20,6 +21,16 @@ const BADGE_COLORS = [
   "#E63946", // أحمر
   "#2A9D8F", // أخضر مزرق
 ];
+// يحوّل فيديو المنتور القادم من الـ API لنفس الشكل اللي بيستعمله الكارد
+const toCardVideo = (mv) => ({
+  id: mv.youtubeId, // نفس الـ ID المستعمل بعلامة ✅ والتقدّم
+  title: mv.title,
+  description: mv.description,
+  duration: mv.duration,
+  thumbnail: `https://i.ytimg.com/vi/${mv.youtubeId}/hqdefault.jpg`,
+  category: mv.category,
+  categoryKey: mv.categoryKey,
+});
 
 export default function CourseVideos() {
   const navigate = useNavigate();
@@ -63,48 +74,63 @@ export default function CourseVideos() {
 }, [pathKey, requestedTab]);
 
   useEffect(() => {
-    let cancelled = false;
+  let cancelled = false;
 
-    async function loadVideos() {
-      setLoading(true);
-      setError(null);
-      try {
-              if (activeTab === "all") {
+  async function loadVideos() {
+    setLoading(true);
+    setError(null);
+
+    // 1) فيديوهات المنتور من الـ API
+    let mentorVideos = [];
+    try {
+      const data = await getVideosByPath(pathKey);
+      mentorVideos = data.map(toCardVideo);
+    } catch (e) {
+      console.warn("فشل جلب فيديوهات المنتور:", e.message);
+    }
+    if (activeTab !== "all") {
+      mentorVideos = mentorVideos.filter((v) => v.categoryKey === activeTab);
+    }
+
+    // 2) فيديوهات الـ playlists الحالية (احذفي هذا القسم لو بدك المنتور بس)
+    let playlistVideos = [];
+    let playlistError = null;
+    try {
+      if (activeTab === "all") {
         const results = await Promise.allSettled(
           courseCategories.map(async (c) => {
             const vids = await fetchPlaylistVideos(c.playlistId, 6);
             return vids.map((v) => ({ ...v, category: c.label, categoryKey: c.key }));
           })
         );
-          if (!cancelled) {
-            const successfulVideos = results
-              .filter((r) => r.status === "fulfilled")
-              .flatMap((r) => r.value);
-            setVideos(successfulVideos);
-            results.forEach((r, i) => {
-              if (r.status === "rejected") {
-                console.warn(`فشل تصنيف "${courseCategories[i].label}":`, r.reason?.message);
-              }
-            });
+        playlistVideos = results.filter((r) => r.status === "fulfilled").flatMap((r) => r.value);
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.warn(`فشل تصنيف "${courseCategories[i].label}":`, r.reason?.message);
           }
-              } else {
-          const category = courseCategories.find((c) => c.key === activeTab);
-          const vids = await fetchPlaylistVideos(category.playlistId, 100);
-          if (!cancelled)
-            setVideos(vids.map((v) => ({ ...v, category: category.label, categoryKey: category.key })));
-        }
-      } catch (err) {
-        if (!cancelled) setError(err.message);
-      } finally {
-        if (!cancelled) setLoading(false);
+        });
+      } else {
+        const category = courseCategories.find((c) => c.key === activeTab);
+        const vids = await fetchPlaylistVideos(category.playlistId, 100);
+        playlistVideos = vids.map((v) => ({ ...v, category: category.label, categoryKey: category.key }));
       }
+    } catch (err) {
+      playlistError = err.message;
     }
 
-    loadVideos();
-    return () => {
-      cancelled = true;
-    };
-  }, [activeTab, courseCategories]);
+    if (cancelled) return;
+    const all = [...mentorVideos, ...playlistVideos];
+    setVideos(all);
+    // نعرض الخطأ فقط لو ما في ولا فيديو
+    setError(all.length === 0 ? playlistError : null);
+    setLoading(false);
+  }
+
+  loadVideos();
+  return () => {
+    cancelled = true;
+  };
+}, [activeTab, courseCategories, pathKey]);
 
  const handleOpenVideo = (video) => {
   setActiveVideoId(video.id);

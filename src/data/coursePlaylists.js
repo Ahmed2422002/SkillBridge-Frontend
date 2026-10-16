@@ -34,9 +34,7 @@ export const fullstackCategories = [
   { key: "SQL", label: "SQL & PostgreSQL", playlistId: "PLDoPjvoNmBAz6DT8SzQ1CODJTH-NIA7R9" },
   { key: "Django", label: "Django", playlistId: "PLknwEmKsW8OtK_n48UOuYGxJPbSFrICxm" },
   { key: "REST APIs", label: "REST APIs", playlistId: "PLMTdZ61eBnyqzVhegrlKy38Zwzky-eugX" },
-  { key: "Full-Stack Integration", label: "Full-Stack Integration", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
   { key: "Deployment", label: "Deployment", playlistId: "PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR" },
-  { key: "Capstone Project", label: "Capstone Project", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
 ];
 
 // ====== Data Science: نفس الـ 12 خطوة الموجودة بالضبط في paths.datascientist.steps بملف OnboardingRoadmap.jsx ======
@@ -49,58 +47,44 @@ export const datascientistCategories = [
   { key: "Data Visualization", label: "Data Visualization (Matplotlib/Seaborn)", playlistId: "PLNJJ29ohdyWm18ipuHc-m9keFb8Fxbmju" },
   { key: "Linear Algebra", label: "Linear Algebra", playlistId: "PLW4fKU07_q1cT08ESJRypw2EssmZEYXH2" },
   { key: "SQL", label: "SQL & Database", playlistId: "PLDoPjvoNmBAz6DT8SzQ1CODJTH-NIA7R9" },
-  { key: "Statistical Inference", label: "Statistical Inference", playlistId: "PLCVy8dqNAIgnrGoeg9_JHyncFWjpn-mbH&index=1" },
-  { key: "Machine Learning", label: "Machine Learning ", playlistId: "PLPBnj6azlABapMXzdpFXBScfZerZygcrz&index=1" },
+  { key: "Statistical Inference", label: "Statistical Inference", playlistId: "PLCVy8dqNAIgnrGoeg9_JHyncFWjpn-mbH" },
+  { key: "Machine Learning", label: "Machine Learning ", playlistId: "PLUTTglLg097yFwGNk4rEn7HlC-U6Y-kJr" },
   { key: "Deep Learning", label: "Deep Learning Basics", playlistId: "PLH0em1f_fBoT1xlF8F4bD2CQd--FZ3RR8" },
  
 ];
 
 // ====== Mobile: نفس الـ 12 خطوة الموجودة بالضبط في paths.mobile.steps بملف OnboardingRoadmap.jsx ======
 export const mobileCategories = [
-  { key: "Setup & Environment", label: "Setup & Environment", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Programming Basics", label: "Programming Basics", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Basic UI", label: "Basic UI", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Data Storage", label: "Data Storage", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "API Integration", label: "API Integration", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "State Management", label: "State Management", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "React Native", label: "Native Features", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Unit Testing", label: "Unit Testing", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Performance Optimization", label: "Performance Opt.", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Security Basics", label: "Security Basics", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Advanced Features", label: "Advanced Features (e.g., Push notifications)", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Deployment", label: "Deployment", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
+  {key: "Setup & Environment", label: "Setup & Environment ", playlistId: "PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ" },
+  { key: "Programming Basics", label: "Programming Basics", playlistId: "PLw6Y5u47CYq47oDw63bMqkq06fjuoK_GJ" },
+  { key: "Basic UI", label: "Basic UI", playlistId: "PL1WkZqhlAdC-i3Vs_HBQw9BPT9-_zMSun" },
+  { key: "API Integration", label: "API Integration", playlistId: "PLW3uJGWFOnbEw2PfOLoBV8msehVZtIWFz" },
+  { key: "State Management", label: "State Management", playlistId: "PL6yRaaP0WPkUf-ff1OX99DVSL1cynLHxO" },
+  { key: "React Native", label: "Native Features", playlistId: "PLDW6PD2vA6ck" },
+  { key: "Unit Testing", label: "Unit Testing", playlistId: "PL4n1Qos4Tb6RrQpmpGWALaE1PVvWR8d3A" },
+  { key: "Performance Optimization", label: "Performance Opt.", playlistId: "PLejc1JbD4ZFTYdkjzqYBujf7UCVQyn_aq" },
+  { key: "Advanced Features", label: "Advanced Features (e.g., Push notifications)", playlistId: "PLYfTCw9blWRMwKMz9e3MyewOTQQBbUt7e" },
+ 
 ];
 
 // ====== UI/UX: نفس الـ 12 خطوة الموجودة بالضبط في paths.uiux.steps بملف OnboardingRoadmap.jsx ======
 export const uiuxCategories = [
-  { key: "User Research", label: "User Research", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Information Architecture", label: "Information Architecture", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Wireframing", label: "Wireframing", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "UI Fundamentals", label: "UI Fundamentals", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Figma", label: "Design Systems", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Prototyping", label: "Prototyping", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Usability Testing", label: "Usability Testing", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Visual Design", label: "Visual Design", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Interaction Design", label: "Interaction Design", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Motion Design", label: "Motion Design", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Accessible Design", label: "Accessible Design", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Design Capstone", label: "Design Capstone", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
+  { key: "User Research", label: "User Research", playlistId: "PL1h8Fv-RGaUJJdI0JS6I9eE49kXFxbQwJ" },
+  { key: "Information Architecture", label: "Information Architecture", playlistId: "PLPKlKj-O4T-WX6X0PwwCIdEcUReL1Nrq8" },
+  { key: "Wireframing", label: "Wireframing", playlistId: "PLDoPjvoNmBAxQFcU0t_rjaL0geUX47VtL" },
+  { key: "UI Fundamentals", label: "UI Fundamentals", playlistId: "PLl0Umi92CQzUiSX7uY-_XuI3LeSUyCysm" },
+  { key: "Figma", label: "Design Systems", playlistId: "PLTRDUPO2OmIkAcnzgg0hi7SpiKVwGro-y" },
+  { key: "Usability Testing", label: "Usability Testing", playlistId: "PLJOFJ3Ok_idsS9msQ0S23zczHChp7mpMY" },
+  { key: "Visual Design", label: "Visual Design", playlistId: "PL4xeUOr3Yk9fMuDOuggAd6NO44oIVVKWF" },
+  { key: "Interaction Design", label: "Interaction Design", playlistId: "PLLy_2iUCG87D_R2oD4Q6zKzWoakUQomoR&index=2" },
+  { key: "Motion Design", label: "Motion Design", playlistId: "PLgGbWId6zgaV9QYvGLQF_hWgTR5jk_s_q" },
+  
 ];
 
 // ====== Cyber Security: نفس الـ 12 خطوة الموجودة بالضبط في paths.cybersecurity.steps بملف OnboardingRoadmap.jsx ======
 export const cybersecurityCategories = [
-  { key: "Ethical Hacking", label: "Ethical Hacking", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Cyber Law", label: "Cyber Law", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Risk Management", label: "Risk Management", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "System Security", label: "System Security", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "OS Hardening", label: "OS Hardening", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "IAM", label: "IAM", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Network Forensics", label: "Network Forensics", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Incident Response", label: "Incident Response", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Cloud Security", label: "Cloud Security", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Penetration Testing", label: "Malware Analysis", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Red Teaming", label: "Red Teaming", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
-  { key: "Security Capstone", label: "Security Capstone", playlistId: "TODO_REPLACE_WITH_REAL_PLAYLIST_ID" },
+  { key: "Cybersecurity Basics", label: "Cybersecurity Basics", playlistId: "PLh2Jy0nKL_j1WZMzITHgUuzaadpSULlMm" },
+ 
 ];
 
 // خريطة مركزية تربط اسم المسار (بالرابط /learning/:pathKey) بعنوانه ووصفه وتصنيفاته

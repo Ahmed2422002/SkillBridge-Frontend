@@ -1,4 +1,7 @@
-import React, { useRef, useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import { learningPaths } from "../data/coursePlaylists";
+import { getAllVideos, createVideo, deleteVideo, extractYouTubeId } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import {
   BsArrowLeft,
@@ -9,10 +12,11 @@ import {
   BsPencilFill,
   BsFilesAlt,
   BsTrashFill,
+  BsYoutube
 } from "react-icons/bs";
 
 // بيانات وهمية مبدئية — لاحقًا تجيبيها من backend
-const INITIAL_VIDEOS = [
+/*const INITIAL_VIDEOS = [
   {
     id: 1,
     course: "HTML & CSS Foundations",
@@ -33,7 +37,7 @@ const INITIAL_VIDEOS = [
     duration: "18:46",
     status: "Published",
   },
-];
+];*/
 
 function VideoCard({ video, onDelete }) {
   return (
@@ -41,10 +45,14 @@ function VideoCard({ video, onDelete }) {
       <div className="bg-white rounded-4 overflow-hidden h-100 shadow-sm">
         <div
           className="position-relative d-flex align-items-center justify-content-center"
+         
           style={{
-            aspectRatio: "16 / 9",
-            background: "linear-gradient(135deg, #0D3B3E 0%, #14555A 100%)",
-          }}
+          aspectRatio: "16 / 9",
+          backgroundImage: `url(https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+         
         >
           <span
             className="position-absolute top-0 start-0 m-2 badge rounded-pill"
@@ -59,6 +67,7 @@ function VideoCard({ video, onDelete }) {
             type="button"
             className="btn btn-light rounded-circle p-3 d-flex align-items-center justify-content-center bg-opacity-75"
             aria-label={`Play ${video.title}`}
+             onClick={() => window.open(`https://www.youtube.com/watch?v=${video.youtubeId}`, "_blank")}
           >
             <BsPlayFill size={20} />
           </button>
@@ -116,22 +125,79 @@ function IconButton({ icon, label, danger, onClick }) {
 
 export default function MentorVideos() {
   const navigate = useNavigate();
-  const [videos, setVideos] = useState(INITIAL_VIDEOS);
-  const fileInputRef = useRef(null);
+ const [videos, setVideos] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+const [showForm, setShowForm] = useState(false);
+const [saving, setSaving] = useState(false);
 
-  const handleUploadClick = () => fileInputRef.current?.click();
+const emptyForm = {
+  youtubeUrl: "",
+  title: "",
+  description: "",
+  duration: "",
+  pathKey: "frontend",
+  categoryKey: learningPaths.frontend.categories[0].key,
+};
+const [form, setForm] = useState(emptyForm);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    // اربطيها هون بالـ API الحقيقي لرفع الفيديو
-    console.log("Selected file:", file.name);
-    e.target.value = "";
-  };
+useEffect(() => {
+  let cancelled = false;
+  getAllVideos()
+    .then((data) => !cancelled && setVideos(data))
+    .catch((e) => !cancelled && setError(e.message))
+    .finally(() => !cancelled && setLoading(false));
+  return () => { cancelled = true; };
+}, []);
 
-  const handleDelete = (id) => {
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setForm((prev) =>
+    name === "pathKey"
+      ? { ...prev, pathKey: value, categoryKey: learningPaths[value].categories[0].key }
+      : { ...prev, [name]: value }
+  );
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const youtubeId = extractYouTubeId(form.youtubeUrl);
+  if (!youtubeId) {
+    setError("رابط YouTube غير صحيح");
+    return;
+  }
+  const category = learningPaths[form.pathKey].categories.find((c) => c.key === form.categoryKey);
+  setSaving(true);
+  setError(null);
+  try {
+    const saved = await createVideo({
+      youtubeId,
+      youtubeUrl: form.youtubeUrl,
+      title: form.title,
+      description: form.description,
+      duration: form.duration,
+      pathKey: form.pathKey,
+      categoryKey: category.key,
+      category: category.label,
+    });
+    setVideos((prev) => [saved, ...prev]);
+    setForm(emptyForm);
+    setShowForm(false);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setSaving(false);
+  }
+};
+
+const handleDelete = async (id) => {
+  try {
+    await deleteVideo(id);
     setVideos((prev) => prev.filter((v) => v.id !== id));
-  };
+  } catch (err) {
+    setError(err.message);
+  }
+};
 
   return (
     <div className="bg-light min-vh-100">
@@ -203,22 +269,62 @@ export default function MentorVideos() {
               </p>
             </div>
 
-            <button
+             <button
               type="button"
               className="btn text-white rounded-3 d-flex align-items-center gap-2 px-3 py-2 fw-semibold"
               style={{ backgroundColor: "#0D9488" }}
-              onClick={handleUploadClick}
+              onClick={() => setShowForm((p) => !p)}
             >
-              <BsCloudUpload /> Upload Video
+              <BsYoutube /> Add YouTube Video
             </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/*"
-              className="d-none"
-              onChange={handleFileChange}
-            />
+           
           </div>
+          {error && <div className="alert alert-danger py-2 small">{error}</div>}
+
+{showForm && (
+  <form onSubmit={handleSubmit} className="border rounded-4 p-3 mb-4">
+    <div className="row g-3">
+      <div className="col-12">
+        <label className="form-label small fw-semibold">YouTube Link</label>
+        <input name="youtubeUrl" value={form.youtubeUrl} onChange={handleChange}
+          className="form-control" placeholder="https://www.youtube.com/watch?v=..." required />
+      </div>
+      <div className="col-md-6">
+        <label className="form-label small fw-semibold">Title</label>
+        <input name="title" value={form.title} onChange={handleChange} className="form-control" required />
+      </div>
+      <div className="col-md-6">
+        <label className="form-label small fw-semibold">Duration (optional)</label>
+        <input name="duration" value={form.duration} onChange={handleChange} className="form-control" placeholder="16:45" />
+      </div>
+      <div className="col-12">
+        <label className="form-label small fw-semibold">Description</label>
+        <textarea name="description" value={form.description} onChange={handleChange} className="form-control" rows={2} />
+      </div>
+      <div className="col-md-6">
+        <label className="form-label small fw-semibold">Learning Path</label>
+        <select name="pathKey" value={form.pathKey} onChange={handleChange} className="form-select">
+          {Object.entries(learningPaths).map(([key, p]) => (
+            <option key={key} value={key}>{p.title}</option>
+          ))}
+        </select>
+      </div>
+      <div className="col-md-6">
+        <label className="form-label small fw-semibold">Category</label>
+        <select name="categoryKey" value={form.categoryKey} onChange={handleChange} className="form-select">
+          {learningPaths[form.pathKey].categories.map((c) => (
+            <option key={c.key} value={c.key}>{c.label}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+    <button type="submit" disabled={saving} className="btn text-white rounded-3 mt-3 px-4" style={{ backgroundColor: "#0D9488" }}>
+      {saving ? "Saving..." : "Publish"}
+    </button>
+  </form>
+)}
+
+{loading && <p className="text-muted text-center">Loading...</p>}
 
           <div className="row g-3">
             {videos.map((video) => (
