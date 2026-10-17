@@ -28,7 +28,7 @@ export const saveToken = (token) => {
 
 // دالة لإرسال طلبات POST بصيغة JSON (تستخدم في التسجيل والدخول)
 export const postJSON = async (url, data) => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}${url}`, {
+  fetch(`${API_BASE}${url}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
