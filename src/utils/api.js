@@ -1,6 +1,7 @@
-// غيّري الرابط حسب الـ backend عندكم (CRA: process.env.REACT_APP_API_URL / Vite: import.meta.env.VITE_API_URL)
-// تأكد إنه في ملف .env المتغير REACT_APP_API_URL قيمته: https://skillbridge-ai-dwfz.onrender.com
-const API_BASE = process.env.REACT_APP_API_URL || "https://skillbridge-ai-dwfz.onrender.com"; 
+// الرابط الأساسي مع إضافة /api/v1 ليتطابق مع مسارات الباك إند
+const API_BASE = process.env.REACT_APP_API_URL 
+  ? `${process.env.REACT_APP_API_URL}/api/v1` 
+  : "https://skillbridge-ai-dwfz.onrender.com/api/v1";
 
 // يستخرج الـ ID من أي رابط YouTube (watch, youtu.be, embed, shorts)
 export function extractYouTubeId(url) {
@@ -11,7 +12,7 @@ export function extractYouTubeId(url) {
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { "Content-Type": "application/json" }, // لو عندكم توكن: أضيفي Authorization هون
+    headers: { "Content-Type": "application/json" },
     ...options,
   });
   if (!res.ok) throw new Error(`فشل الطلب (${res.status})`);
@@ -30,7 +31,6 @@ export const saveToken = (token) => {
 
 // دالة لإرسال طلبات POST بصيغة JSON (تستخدم في التسجيل والدخول)
 export const postJSON = async (url, data) => {
-  // التعديل 1: ضفنا return عشان الدالة ترجع النتيجة
   const response = await fetch(`${API_BASE}${url}`, {
     method: "POST",
     headers: {
