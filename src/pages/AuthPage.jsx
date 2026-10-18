@@ -1,5 +1,4 @@
-
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaGoogle,
@@ -11,20 +10,16 @@ import {
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
 import { postJSON, saveToken } from "../utils/api";
 
-// كومبوننت واحد يغطي واجهة تسجيل الطالب:
-//   mode="signup" -> الصورة 2 (Create Your Account)
-//   mode="login"  -> الصورة 4 (Welcome Back)
-// يُستخدم في الراوتر على المسارات /signup/student و /login/student
-// (يوصل لهذا الكومبوننت بعد ما المستخدم يختار "Student" من شاشة RoleSelect)
-
 export default function AuthPage({ mode }) {
   const navigate = useNavigate();
   const isSignUp = mode === "signup";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-// يمسح الخطأ لما يتبدل بين Login و Sign Up
-useEffect(() => { setError(""); }, [mode]);   
+  useEffect(() => {
+    setError("");
+  }, [mode]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -39,57 +34,45 @@ useEffect(() => { setError(""); }, [mode]);
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  if (isSignUp && form.password !== form.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    if (isSignUp && form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const data = isSignUp
-      ? await postJSON("/auth/student/signup", {
-          fullName: form.fullName,
-          email: form.email,
-          password: form.password,
-        })
-      : await postJSON("/auth/student/login", {
-          email: form.email,
-          password: form.password,
-        });
+    setLoading(true);
+    try {
+      // بناءً على الـ Swagger بتاعك: المسار الصح هو /register أو /login
+      // (تأكد إن API_BASE في ملف api.js واقف عند /api/v1)
+      const data = isSignUp
+        ? await postJSON("/register", {
+            full_name: form.fullName, // الباك إند بيستقبل full_name
+            email: form.email,
+            password: form.password,
+          })
+        : await postJSON("/login", {
+            email: form.email,
+            password: form.password,
+          });
 
-    if (data.token) saveToken(data.token, isSignUp ? true : remember);
-    navigate("/onboarding");
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-/*const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+      if (data && (data.access_token || data.token)) {
+        saveToken(data.access_token || data.token); // الباك إند بيرجع access_token
+        navigate("/onboarding");
+      } else {
+        setError("تم التسجيل لكن لم يتم استلام توكن.");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (isSignUp && form.password !== form.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
-
-  setLoading(true);
-
-  // تجربة مؤقتة بدون Backend
-  setTimeout(() => {
-    saveToken("test-token", isSignUp ? true : remember);
-    navigate("/onboarding");
-    setLoading(false);
-  }, 500);
-};
-*/
   return (
-    <div className="auth-page d-flex flex-column min-vh-100 bg-white">*/
+    <div className="auth-page d-flex flex-column min-vh-100 bg-white">
       {/* Navbar */}
       <nav className="navbar navbar-light bg-white py-3">
         <div className="container d-flex justify-content-end align-items-center gap-3">
@@ -126,7 +109,6 @@ useEffect(() => { setError(""); }, [mode]);
             </p>
           </div>
 
-          {/* Sign Up / Login Toggle */}
           <div className="bg-light rounded-pill p-1 d-flex mb-4">
             <button
               type="button"
@@ -251,7 +233,7 @@ useEffect(() => { setError(""); }, [mode]);
               </div>
             )}
 
-                       {error && <div className="alert alert-danger py-2 small">{error}</div>}
+            {error && <div className="alert alert-danger py-2 small">{error}</div>}
 
             <button
               type="submit"
@@ -309,4 +291,4 @@ useEffect(() => { setError(""); }, [mode]);
       </div>
     </div>
   );
-}
+    }
