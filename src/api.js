@@ -1,4 +1,4 @@
-const API_URL = "https://skillbridge-ai-dwfz.onrender.com/api/v1";
+const API_URL = "https://skillbridge-ai-dwfz.onrender.com";
 
 export async function postJSON(path, body) {
   let response;
