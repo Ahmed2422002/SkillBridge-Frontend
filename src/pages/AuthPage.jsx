@@ -1,5 +1,4 @@
-
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaGoogle,
@@ -23,8 +22,11 @@ export default function AuthPage({ mode }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-// يمسح الخطأ لما يتبدل بين Login و Sign Up
-useEffect(() => { setError(""); }, [mode]);   
+  // يمسح الخطأ لما يتبدل بين Login و Sign Up
+  useEffect(() => {
+    setError("");
+  }, [mode]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -39,57 +41,45 @@ useEffect(() => { setError(""); }, [mode]);
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  if (isSignUp && form.password !== form.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    if (isSignUp && form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const data = isSignUp
-      ? await postJSON("/auth/student/signup", {
-          fullName: form.fullName,
-          email: form.email,
-          password: form.password,
-        })
-      : await postJSON("/auth/student/login", {
-          email: form.email,
-          password: form.password,
-        });
+    setLoading(true);
+    try {
+      const data = isSignUp
+        ? await postJSON("/auth/student/signup", {
+            name: form.fullName, // <--- تم التعديل هنا ليتطابق مع الباك إند
+            email: form.email,
+            password: form.password,
+          })
+        : await postJSON("/auth/student/login", {
+            email: form.email,
+            password: form.password,
+          });
 
-    if (data.token) saveToken(data.token, isSignUp ? true : remember);
-    navigate("/onboarding");
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-/*const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+      // التحقق من التوكن (تأكد أن الباك إند يرجع access_token)
+      if (data.access_token) {
+        saveToken(data.access_token, isSignUp ? true : remember);
+        navigate("/onboarding");
+      } else {
+        // إذا لم يرجع توكن، ربما يحتاج لتأكيد أو هناك مشكلة
+        setError("Login successful but no token received");
+      }
+    } catch (err) {
+      setError(err.message || "Something went wrong, please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (isSignUp && form.password !== form.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
-
-  setLoading(true);
-
-  // تجربة مؤقتة بدون Backend
-  setTimeout(() => {
-    saveToken("test-token", isSignUp ? true : remember);
-    navigate("/onboarding");
-    setLoading(false);
-  }, 500);
-};
-*/
   return (
-    <div className="auth-page d-flex flex-column min-vh-100 bg-white">*/
+    <div className="auth-page d-flex flex-column min-vh-100 bg-white">
       {/* Navbar */}
       <nav className="navbar navbar-light bg-white py-3">
         <div className="container d-flex justify-content-end align-items-center gap-3">
@@ -251,7 +241,7 @@ useEffect(() => { setError(""); }, [mode]);
               </div>
             )}
 
-                       {error && <div className="alert alert-danger py-2 small">{error}</div>}
+            {error && <div className="alert alert-danger py-2 small">{error}</div>}
 
             <button
               type="submit"
@@ -259,7 +249,11 @@ useEffect(() => { setError(""); }, [mode]);
               className="btn w-100 text-white rounded-pill py-2 fw-semibold mb-3"
               style={{ backgroundColor: "#22D3C5" }}
             >
-              {loading ? "Please wait..." : isSignUp ? "Continue with Email" : "Log In"}
+              {loading
+                ? "Please wait..."
+                : isSignUp
+                ? "Continue with Email"
+                : "Log In"}
             </button>
           </form>
 
@@ -309,4 +303,4 @@ useEffect(() => { setError(""); }, [mode]);
       </div>
     </div>
   );
-}
+                      }
