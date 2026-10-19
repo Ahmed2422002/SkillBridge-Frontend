@@ -1,5 +1,5 @@
 // غيّري الرابط حسب الـ backend عندكم (CRA: process.env.REACT_APP_API_URL / Vite: import.meta.env.VITE_API_URL)
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://skillbridge-ai-dwfz.onrender.com/api/v1";
 
 // يستخرج الـ ID من أي رابط YouTube (watch, youtu.be, embed, shorts)
 export function extractYouTubeId(url) {
