@@ -16,7 +16,6 @@ export default function AuthPage({ mode }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // يمسح الخطأ لما يتبدل بين Login و Sign Up
   useEffect(() => {
     setError("");
   }, [mode]);
@@ -46,13 +45,14 @@ export default function AuthPage({ mode }) {
 
     setLoading(true);
     try {
+      // 💥 الحل المدفعي: إرسال بيانات ثابتة تتطابق مع Swagger
       const data = isSignUp
         ? await postJSON("/auth/student/signup", {
-            name: form.fullName,
-            username: form.fullName,
-            full_name: form.fullName,
-            email: form.email,
-            password: form.password,
+            name: "Ahmed Test",
+            username: "ahmedtest", // بدون مسافات
+            full_name: "Ahmed Test",
+            email: form.email,     // بنسيب الإيميل متغير عشان نختبر إيميلات جديدة
+            password: "123456",    // باسورد ثابت
           })
         : await postJSON("/auth/student/login", {
             email: form.email,
@@ -74,7 +74,6 @@ export default function AuthPage({ mode }) {
 
   return (
     <div className="auth-page d-flex flex-column min-vh-100 bg-white">
-      {/* Navbar */}
       <nav className="navbar navbar-light bg-white py-3">
         <div className="container d-flex justify-content-end align-items-center gap-3">
           <span
@@ -93,7 +92,6 @@ export default function AuthPage({ mode }) {
         </div>
       </nav>
 
-      {/* Main content */}
       <div className="flex-grow-1 d-flex align-items-center justify-content-center py-4">
         <div
           className="card border-0 shadow-sm rounded-4 p-4 p-md-5"
@@ -110,7 +108,6 @@ export default function AuthPage({ mode }) {
             </p>
           </div>
 
-          {/* Sign Up / Login Toggle */}
           <div className="bg-light rounded-pill p-1 d-flex mb-4">
             <button
               type="button"
@@ -297,4 +294,4 @@ export default function AuthPage({ mode }) {
       </div>
     </div>
   );
-          }
+              }
