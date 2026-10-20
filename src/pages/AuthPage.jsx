@@ -54,7 +54,9 @@ export default function AuthPage({ mode }) {
     try {
       const data = isSignUp
         ? await postJSON("/auth/student/signup", {
-            name: form.fullName, // <--- تم التعديل هنا ليتطابق مع الباك إند
+            name: form.fullName,          // للاحتياط
+            username: form.fullName,      // للاحتياط
+            full_name: form.fullName,     // للاحتياط
             email: form.email,
             password: form.password,
           })
@@ -68,7 +70,6 @@ export default function AuthPage({ mode }) {
         saveToken(data.access_token, isSignUp ? true : remember);
         navigate("/onboarding");
       } else {
-        // إذا لم يرجع توكن، ربما يحتاج لتأكيد أو هناك مشكلة
         setError("Login successful but no token received");
       }
     } catch (err) {
@@ -303,4 +304,4 @@ export default function AuthPage({ mode }) {
       </div>
     </div>
   );
-                      }
+  }
