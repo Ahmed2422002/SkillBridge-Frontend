@@ -10,12 +10,6 @@ import {
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
 import { postJSON, saveToken } from "../api";
 
-// كومبوننت واحد يغطي واجهة تسجيل الطالب:
-//   mode="signup" -> الصورة 2 (Create Your Account)
-//   mode="login"  -> الصورة 4 (Welcome Back)
-// يُستخدم في الراوتر على المسارات /signup/student و /login/student
-// (يوصل لهذا الكومبوننت بعد ما المستخدم يختار "Student" من شاشة RoleSelect)
-
 export default function AuthPage({ mode }) {
   const navigate = useNavigate();
   const isSignUp = mode === "signup";
@@ -54,9 +48,9 @@ export default function AuthPage({ mode }) {
     try {
       const data = isSignUp
         ? await postJSON("/auth/student/signup", {
-            name: form.fullName,          // للاحتياط
-            username: form.fullName,      // للاحتياط
-            full_name: form.fullName,     // للاحتياط
+            name: form.fullName,
+            username: form.fullName,
+            full_name: form.fullName,
             email: form.email,
             password: form.password,
           })
@@ -65,7 +59,6 @@ export default function AuthPage({ mode }) {
             password: form.password,
           });
 
-      // التحقق من التوكن (تأكد أن الباك إند يرجع access_token)
       if (data.access_token) {
         saveToken(data.access_token, isSignUp ? true : remember);
         navigate("/onboarding");
@@ -304,4 +297,4 @@ export default function AuthPage({ mode }) {
       </div>
     </div>
   );
-  }
+          }
