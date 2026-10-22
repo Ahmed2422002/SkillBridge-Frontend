@@ -8,7 +8,8 @@ export async function postJSON(path, body) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-  } catch {
+  } catch (err) {
+    console.error("FETCH ERROR:", err);
     throw new Error("Cannot reach the server, please try again later");
   }
 
@@ -20,13 +21,21 @@ export async function postJSON(path, body) {
   }
 
   if (!response.ok) {
+    let detail = null;
+    if (typeof data.detail === "string") {
+      detail = data.detail;
+    } else if (Array.isArray(data.detail) && data.detail[0]?.msg) {
+      detail = data.detail[0].msg;
+    }
+
     const fallback =
       response.status === 401
         ? "Invalid email or password"
-        : response.status === 409
+        : response.status === 400 || response.status === 409
         ? "This email is already registered"
         : "Something went wrong, please try again";
-    throw new Error(data.message || fallback);
+
+    throw new Error(detail || data.message || fallback);
   }
 
   return data;
