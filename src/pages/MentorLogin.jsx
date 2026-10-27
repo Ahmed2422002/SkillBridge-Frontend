@@ -30,7 +30,7 @@ export default function MentorLogin() {
         email: form.email,
         password: form.password,
       });
-      if (data.token) saveToken(data.token, remember);
+    if (data.access_token) saveToken(data.access_token, remember);
       navigate("/mentor-dashboard");
     } catch (err) {
       setError(err.message);
