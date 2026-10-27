@@ -1,4 +1,5 @@
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const ROOT_URL = "https://skillbridge-ai-dwfz.onrender.com";
+const API_URL = ${ROOT_URL}/api/v1;ips
 
 export async function postJSON(path, body) {
   let response;
