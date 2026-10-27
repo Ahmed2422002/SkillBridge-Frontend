@@ -1,5 +1,4 @@
-
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaGoogle,
@@ -11,20 +10,16 @@ import {
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
 import { postJSON, saveToken } from "../api";
 
-// كومبوننت واحد يغطي واجهة تسجيل الطالب:
-//   mode="signup" -> الصورة 2 (Create Your Account)
-//   mode="login"  -> الصورة 4 (Welcome Back)
-// يُستخدم في الراوتر على المسارات /signup/student و /login/student
-// (يوصل لهذا الكومبوننت بعد ما المستخدم يختار "Student" من شاشة RoleSelect)
-
 export default function AuthPage({ mode }) {
   const navigate = useNavigate();
   const isSignUp = mode === "signup";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-// يمسح الخطأ لما يتبدل بين Login و Sign Up
-useEffect(() => { setError(""); }, [mode]);   
+  useEffect(() => {
+    setError("");
+  }, [mode]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -39,58 +34,51 @@ useEffect(() => { setError(""); }, [mode]);
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  if (isSignUp && form.password !== form.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    if (isSignUp && form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const data = isSignUp
-      ? await postJSON("/auth/student/signup", {
-          fullName: form.fullName,
-          email: form.email,
-          password: form.password,
-        })
-      : await postJSON("/auth/student/login", {
+    setLoading(true);
+    try {
+      let data;
+      if (isSignUp) {
+        await postJSON("/auth/student/signup", {
+          full_name: form.fullName,
+          name: form.fullName,
           email: form.email,
           password: form.password,
         });
+        data = await postJSON("/auth/student/login", {
+          email: form.email,
+          password: form.password,
+        });
+      } else {
+        data = await postJSON("/auth/student/login", {
+          email: form.email,
+          password: form.password,
+        });
+      }
 
-    if (data.token) saveToken(data.token, isSignUp ? true : remember);
-    navigate("/onboarding");
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-/*const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+      if (data.access_token) {
+        saveToken(data.access_token, isSignUp ? true : remember);
+        navigate("/onboarding");
+      } else {
+        setError("Login successful but no token received");
+      }
+    } catch (err) {
+      setError(err.message || "Something went wrong, please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (isSignUp && form.password !== form.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
-
-  setLoading(true);
-
-  // تجربة مؤقتة بدون Backend
-  setTimeout(() => {
-    saveToken("test-token", isSignUp ? true : remember);
-    navigate("/onboarding");
-    setLoading(false);
-  }, 500);
-};
-*/
   return (
-    <div className="auth-page d-flex flex-column min-vh-100 bg-white">*/
-      {/* Navbar */}
+    <div className="auth-page d-flex flex-column min-vh-100 bg-white">
       <nav className="navbar navbar-light bg-white py-3">
         <div className="container d-flex justify-content-end align-items-center gap-3">
           <span
@@ -109,7 +97,6 @@ useEffect(() => { setError(""); }, [mode]);
         </div>
       </nav>
 
-      {/* Main content */}
       <div className="flex-grow-1 d-flex align-items-center justify-content-center py-4">
         <div
           className="card border-0 shadow-sm rounded-4 p-4 p-md-5"
@@ -126,7 +113,6 @@ useEffect(() => { setError(""); }, [mode]);
             </p>
           </div>
 
-          {/* Sign Up / Login Toggle */}
           <div className="bg-light rounded-pill p-1 d-flex mb-4">
             <button
               type="button"
@@ -251,7 +237,7 @@ useEffect(() => { setError(""); }, [mode]);
               </div>
             )}
 
-                       {error && <div className="alert alert-danger py-2 small">{error}</div>}
+            {error && <div className="alert alert-danger py-2 small">{error}</div>}
 
             <button
               type="submit"
@@ -259,7 +245,11 @@ useEffect(() => { setError(""); }, [mode]);
               className="btn w-100 text-white rounded-pill py-2 fw-semibold mb-3"
               style={{ backgroundColor: "#22D3C5" }}
             >
-              {loading ? "Please wait..." : isSignUp ? "Continue with Email" : "Log In"}
+              {loading
+                ? "Please wait..."
+                : isSignUp
+                ? "Continue with Email"
+                : "Log In"}
             </button>
           </form>
 
@@ -309,4 +299,4 @@ useEffect(() => { setError(""); }, [mode]);
       </div>
     </div>
   );
-}
+        }
