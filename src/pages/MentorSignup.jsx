@@ -46,7 +46,7 @@ export default function MentorSignup() {
     try {
       const { confirmPassword, ...rest } = form;
       const data = await postJSON("/auth/mentor/signup", { ...rest, bio });
-      if (data.token) saveToken(data.token, true);
+      if (data.access_token) saveToken(data.access_token, true);
       navigate("/mentor-dashboard");
     } catch (err) {
       setError(err.message);
